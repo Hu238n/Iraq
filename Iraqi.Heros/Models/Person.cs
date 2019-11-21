@@ -19,6 +19,7 @@ namespace Iraqi.Heros.Models
         public ICollection<Image> Images { get; set; }
         [JsonIgnore]
         public int Status { get; set; }
+        public ICollection<Comments> Comments { get; set; }
     }
 }
 

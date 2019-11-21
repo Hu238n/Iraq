@@ -73,54 +73,88 @@ namespace Iraqi.Heros.Controllers
         [HttpGet("All/{start}/{end}")]
         public async Task<IActionResult> All(int start,int end)
         {
-            return Ok(
-                await _dbContext.Persons.Include(x => x.Images).Where(x=>x.Status!=0).Select(x => new
-                {
-                    x.Id,
-                    x.Name,
-                    x.PoK,
-                    x.Gov,
-                    x.DoB,
-                    x.Type,
-                    ImageName = x.Images.Select(z=> new string($"{z.Name}{z.Key}")).First()
-                }
-                    
-                    ).AsNoTracking().OrderBy(x=>x.Id).Skip(start).Take(end).ToListAsync()
-                );;
+            var result = await _dbContext.Persons.Include(x => x.Images).Where(x => x.Status != 0).Select(x => new
+            {
+                x.Id,
+                x.Name,
+                x.PoK,
+                x.Gov,
+                x.DoB,
+                x.Type,
+                ImageName = x.Images.Select(z => new string($"{z.Name}{z.Key}")).First()
+            }
+
+                    ).AsNoTracking().OrderBy(x => x.Id).Skip(start).Take(end).ToListAsync();
+            if (result == null)
+                return BadRequest();
+
+
+            return Ok(result);
         }
 
         [HttpGet("GetByType/{start}/{end}/{type}")]
         public async Task<IActionResult> GetByType(int start, int end,Type type)
         {
-            return Ok(
-                await _dbContext.Persons.Include(x => x.Images).Where(x => x.Type.Equals(type) && x.Status != 0).Select(x => new
-                {
-                    x.Id,
-                    x.Name,
-                    x.PoK,
-                    x.Gov,
-                    x.DoB,
-                    
-                    ImageName = x.Images.Select(z => new string($"{z.Name}{z.Key}")).First()
-                }
+            var result = await _dbContext.Persons.Include(x => x.Images).Where(x => x.Type.Equals(type) && x.Status != 0).Select(x => new
+            {
+                x.Id,
+                x.Name,
+                x.PoK,
+                x.Gov,
+                x.DoB,
 
-                    ).AsNoTracking().OrderBy(x => x.Id).Skip(start).Take(end).ToListAsync()
-                ); ;
+                ImageName = x.Images.Select(z => new string($"{z.Name}{z.Key}")).First()
+            }
+
+                    ).AsNoTracking().OrderBy(x => x.Id).Skip(start).Take(end).ToListAsync();
+            if (result == null)
+                return BadRequest();
+            return Ok(result); 
         }
         [HttpGet("GetById/{id}")]
         public async Task<IActionResult> GetById(Guid id)
         {
-            return Ok(
-                await (from person in _dbContext.Persons
-                       where person.Id==id && person.Status!=0
-                       join image in _dbContext.Images on person.Id equals image.PersonId 
-                       select new { 
-                           person,
-                           imageName=  new string($"{image.Name}{image.Key}"),
-                           
-                       }).FirstAsync()
-                );
+            var result = await _dbContext.Persons.Where(c => c.Id == id &&c.Status!=0 ).Include(x => x.Images).Select(c => new
+            {
+                c.Name,
+                c.Id,
+                c.PoK,
+                c.Story,
+                c.Type,
+                c.Gov,
+                c.DoB,
+                c.DoK,
+                c.Images
+            }).FirstAsync();
+            if (result == null)
+                return BadRequest();
+            return Ok(result);
 
+        }
+        [HttpPost("AddComment/{personId}")]
+        public async Task<IActionResult> AddComment([FromBody]Comments comments,Guid personId) {
+
+            var comment = new Comments()
+            {
+                Id = Guid.NewGuid(),
+                Comment = comments.Comment,
+                CommentDate = DateTime.Now,
+                PersonId = personId
+
+            };
+            _dbContext.Add(comment);
+            await _dbContext.SaveChangesAsync();
+            return Ok(comment);
+        }
+        [HttpGet("Comments/{personId}/{start}/{end}")]
+        public async Task<IActionResult> GetAction(Guid personId, int start,int end)
+        {
+            var result = await _dbContext.Comments.
+                Select(x => new { x.Comment,
+                x.CommentDate}).OrderBy(x=>x.CommentDate).Skip(start).Take(end).ToListAsync();
+            if (result == null)
+                return BadRequest();
+                    return Ok(result);
         }
         private async Task<bool> SaveFile(IFormFile file, string documentFileName)
         {
@@ -133,5 +167,6 @@ namespace Iraqi.Heros.Controllers
 
             return true;
         }
+
     }
 }

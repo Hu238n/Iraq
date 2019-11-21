@@ -110,20 +110,23 @@ namespace Iraqi.Heros.Controllers
       
         public async Task<IActionResult> All(int start, int end)
         {
-            return Ok(
-                await _context.Persons.Include(x => x.Images).Where(x=>x.Status==0).Select(x => new
-                {
-                    x.Id,
-                    x.Name,
-                    x.PoK,
-                    x.Gov,
-                    x.DoB,
-                    x.Type,
-                    ImageName = x.Images.Select(z => new string($"{z.Name}{z.Key}")).First()
-                }
+            var result = await _context.Persons.Include(x => x.Images).Where(x => x.Status == 0).Select(x => new
+            {
+                x.Id,
+                x.Name,
+                x.PoK,
+                x.Gov,
+                x.DoB,
+                x.Type,
+                ImageName = x.Images.Select(z => new string($"{z.Name}{z.Key}")).First()
+            }
 
-                    ).AsNoTracking().OrderBy(x => x.Id).Skip(start).Take(end).ToListAsync()
-                ); 
+                     ).AsNoTracking().OrderBy(x => x.Id).Skip(start).Take(end).ToListAsync();
+            if (result == null)
+                return BadRequest();
+
+
+            return Ok(result);
         }
 
 
