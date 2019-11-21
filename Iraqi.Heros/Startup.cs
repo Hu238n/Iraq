@@ -47,7 +47,7 @@ namespace Iraqi.Heros
                  };
              });
             services.AddMvc(c => c.EnableEndpointRouting = false).SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
-                .AddNewtonsoftJson(opt =>opt.SerializerSettings.ReferenceLoopHandling=Newtonsoft.Json.ReferenceLoopHandling.Ignore); ;
+                .AddNewtonsoftJson(opt =>opt.SerializerSettings.ReferenceLoopHandling=Newtonsoft.Json.ReferenceLoopHandling.Ignore); 
             services.AddDbContext<MainDbContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("Conaction")));
             services.AddSwaggerGen(c =>

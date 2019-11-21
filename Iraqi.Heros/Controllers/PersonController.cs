@@ -25,6 +25,11 @@ namespace Iraqi.Heros.Controllers
         [HttpPost("Add")]
         public async Task<IActionResult> Add([FromForm]PersonForm personForm)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+                
             var person = new Person()
             {
                 DoB= personForm.DoB,
@@ -85,7 +90,7 @@ namespace Iraqi.Heros.Controllers
             }
 
                     ).AsNoTracking().OrderBy(x => x.Id).Skip(start).Take(end).ToListAsync();
-            if (result == null)
+            if (result.Count == 0)
                 return BadRequest();
 
 
@@ -107,7 +112,7 @@ namespace Iraqi.Heros.Controllers
             }
 
                     ).AsNoTracking().OrderBy(x => x.Id).Skip(start).Take(end).ToListAsync();
-            if (result == null)
+            if (result.Count == 0)
                 return BadRequest();
             return Ok(result); 
         }
@@ -131,31 +136,7 @@ namespace Iraqi.Heros.Controllers
             return Ok(result);
 
         }
-        [HttpPost("AddComment/{personId}")]
-        public async Task<IActionResult> AddComment([FromBody]Comments comments,Guid personId) {
 
-            var comment = new Comments()
-            {
-                Id = Guid.NewGuid(),
-                Comment = comments.Comment,
-                CommentDate = DateTime.Now,
-                PersonId = personId
-
-            };
-            _dbContext.Add(comment);
-            await _dbContext.SaveChangesAsync();
-            return Ok(comment);
-        }
-        [HttpGet("Comments/{personId}/{start}/{end}")]
-        public async Task<IActionResult> GetAction(Guid personId, int start,int end)
-        {
-            var result = await _dbContext.Comments.
-                Select(x => new { x.Comment,
-                x.CommentDate}).OrderBy(x=>x.CommentDate).Skip(start).Take(end).ToListAsync();
-            if (result == null)
-                return BadRequest();
-                    return Ok(result);
-        }
         private async Task<bool> SaveFile(IFormFile file, string documentFileName)
         {
             if (file == null || file.Length <= 0) return false;

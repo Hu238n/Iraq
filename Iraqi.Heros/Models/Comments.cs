@@ -15,12 +15,12 @@ namespace Iraqi.Heros.Models
         [JsonIgnore]
         public Guid Id { get; set; }
         public string Comment { get; set; }
-
         [JsonIgnore]
         public Guid PersonId { get; set; }
         [JsonIgnore]
         public DateTime CommentDate { get; set; }
         [ForeignKey(nameof(PersonId))]
+        [JsonIgnore]
         public Person Person { get; set; }
     }
 }

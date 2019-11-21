@@ -122,7 +122,7 @@ namespace Iraqi.Heros.Controllers
             }
 
                      ).AsNoTracking().OrderBy(x => x.Id).Skip(start).Take(end).ToListAsync();
-            if (result == null)
+            if (result.Count == 0)
                 return BadRequest();
 
 
@@ -158,10 +158,6 @@ namespace Iraqi.Heros.Controllers
                 {
                     Error = "UserName or Password Incorrect"
                 });
-       
-
-           
-
             var claims = new[]
             {
                 //  new Claim(JwtRegisteredClaimNames.Sub,user.UserName),
