@@ -34,6 +34,9 @@ namespace Iraqi.Heros.Migrations
                     b.Property<Guid>("PersonId")
                         .HasColumnType("uuid");
 
+                    b.Property<bool>("Status")
+                        .HasColumnType("boolean");
+
                     b.HasKey("Id");
 
                     b.HasIndex("PersonId");

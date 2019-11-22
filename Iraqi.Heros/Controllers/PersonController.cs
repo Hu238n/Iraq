@@ -40,7 +40,8 @@ namespace Iraqi.Heros.Controllers
                 PoK= personForm.PoK,
                 Status=0,
                 Story= personForm.Story,
-                Type=personForm.Type
+                Type=personForm.Type,
+              
             };
             _dbContext.Add(person);
             var supportedTypes = new[] { "jpeg", "png", "jpg" };
@@ -86,7 +87,9 @@ namespace Iraqi.Heros.Controllers
                 x.Gov,
                 x.DoB,
                 x.Type,
-                ImageName = x.Images.Select(z => new string($"{z.Name}{z.Key}")).First()
+                x.Story,
+                x.DoK,
+                ImageName = x.Images.Select(z => new string($"{z.Name}{z.Key}")).ToList()
             }
 
                     ).AsNoTracking().OrderBy(x => x.Id).Skip(start).Take(end).ToListAsync();
@@ -107,8 +110,8 @@ namespace Iraqi.Heros.Controllers
                 x.PoK,
                 x.Gov,
                 x.DoB,
-
-                ImageName = x.Images.Select(z => new string($"{z.Name}{z.Key}")).First()
+                x.Story,
+                ImageName = x.Images.Select(z => new string($"{z.Name}{z.Key}")).ToList()
             }
 
                     ).AsNoTracking().OrderBy(x => x.Id).Skip(start).Take(end).ToListAsync();
@@ -130,6 +133,7 @@ namespace Iraqi.Heros.Controllers
                 c.DoB,
                 c.DoK,
                 c.Images
+               
             }).FirstAsync();
             if (result == null)
                 return BadRequest();

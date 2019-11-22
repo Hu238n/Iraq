@@ -13,11 +13,7 @@ namespace Iraqi.Heros.DAL
         public MainDbContext()
         {
         }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseNpgsql("Server=176.9.61.212;Port=5432;Database=Iraq;User Id=postgres;Password=aaa-1994");
-        }
+ 
 
         public DbSet<Person> Persons { get; set; }
         public DbSet<Image> Images { get; set; }

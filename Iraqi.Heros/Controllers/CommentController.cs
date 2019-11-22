@@ -28,7 +28,8 @@ namespace Iraqi.Heros.Controllers
                 Id = Guid.NewGuid(),
                 Comment = comments,
                 CommentDate = DateTime.Now,
-                PersonId = personId
+                PersonId = personId,
+                Status=false
 
             };
             _dbContext.Add(comment);
@@ -38,7 +39,7 @@ namespace Iraqi.Heros.Controllers
         [HttpGet("Comments/{personId}/{start}/{end}")]
         public async Task<IActionResult> GetAction(Guid personId, int start, int end)
         {
-            var result = await _dbContext.Comments.
+            var result = await _dbContext.Comments.Where(x=>x.PersonId==personId && x.Status==true).
                 Select(x => new {
                     x.Comment,
                     x.CommentDate

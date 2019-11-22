@@ -118,6 +118,8 @@ namespace Iraqi.Heros.Controllers
                 x.Gov,
                 x.DoB,
                 x.Type,
+                x.Story,
+                x.DoK,
                 ImageName = x.Images.Select(z => new string($"{z.Name}{z.Key}")).First()
             }
 
@@ -130,7 +132,7 @@ namespace Iraqi.Heros.Controllers
         }
 
 
-        [Authorize(Roles = ("admin"))]
+        
 
         [HttpPut("{id}/{status}")]
         public async Task<IActionResult> UpdateStatus(Guid id, int status)
@@ -146,6 +148,35 @@ namespace Iraqi.Heros.Controllers
             return Ok(result);
         }
 
+
+
+       [HttpGet("Comment/{start}/{end}")]
+       public async Task<IActionResult> GetAllComment(int start,int end) {
+            var result = await _context.Comments.Where(x => x.Status == false).Select(x => new
+            {
+                x.Id,
+                x.Comment,
+                x.CommentDate
+            }).OrderBy(x => x.CommentDate).Skip(start).Take(end).AsNoTracking().ToListAsync();
+            if (result.Count == 0)
+                return BadRequest();
+            return Ok(result);
+        }
+
+        [HttpPut("Comment/{id}/{status}")]
+        public async Task<IActionResult> UpdateComment(Guid id, bool status)
+        {
+            var result = await _context.Comments.FirstAsync(x => x.Id == id);
+            if (result == null)
+                return BadRequest(new
+                {
+                    Error = "Not Found Person"
+                });
+            result.Status = status;
+            _context.Comments.Update(result);
+            await _context.SaveChangesAsync();
+            return Ok(result);
+        }
 
 
         [HttpPost("Login")]

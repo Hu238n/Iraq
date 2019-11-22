@@ -21,6 +21,7 @@ namespace Iraqi.Heros.Models
         public DateTime CommentDate { get; set; }
         [ForeignKey(nameof(PersonId))]
         [JsonIgnore]
+        public bool Status { get; set; }
         public Person Person { get; set; }
     }
 }
