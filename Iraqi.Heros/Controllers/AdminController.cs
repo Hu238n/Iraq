@@ -120,10 +120,10 @@ namespace Iraqi.Heros.Controllers
                 x.Type,
                 x.Story,
                 x.DoK,
-                ImageName = x.Images.Select(z => new string($"{z.Name}{z.Key}")).First()
+                ImageName = x.Images.Select(z => new string($"{z.Name}{z.Key}")).ToList()
             }
 
-                     ).AsNoTracking().OrderBy(x => x.Id).Skip(start).Take(end).ToListAsync();
+                    ).AsNoTracking().OrderBy(x => x.Id).Skip(start).Take(end).ToListAsync();
             if (result.Count == 0)
                 return BadRequest();
 
@@ -167,14 +167,26 @@ namespace Iraqi.Heros.Controllers
         public async Task<IActionResult> UpdateComment(Guid id, bool status)
         {
             var result = await _context.Comments.FirstAsync(x => x.Id == id);
+
+
             if (result == null)
                 return BadRequest(new
                 {
                     Error = "Not Found Person"
                 });
-            result.Status = status;
-            _context.Comments.Update(result);
-            await _context.SaveChangesAsync();
+
+            if (status)
+            {
+                result.Status = status;
+                _context.Comments.Update(result);
+
+            }
+            else
+            {
+                _context.Comments.Remove(result);
+            }
+
+         await _context.SaveChangesAsync();
             return Ok(result);
         }
 
