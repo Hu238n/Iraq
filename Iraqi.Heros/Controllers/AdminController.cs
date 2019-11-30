@@ -134,7 +134,7 @@ namespace Iraqi.Heros.Controllers
 
         
 
-        [HttpPut("{id}/{status}")]
+        [HttpPut("UpdatePerson/{id}/{status}")]
         public async Task<IActionResult> UpdateStatus(Guid id, int status)
         {
             var result = await _context.Persons.FirstAsync(x => x.Id == id);
@@ -201,10 +201,10 @@ namespace Iraqi.Heros.Controllers
                 _context.Comments.Remove(result);
             }
 
-         await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
             return Ok(result);
         }
-        [HttpPut("Comment/{id}/{status}")]
+        [HttpPut("Report/{id}/{status}")]
         public async Task<IActionResult> UpdateReport(Guid id, int status)
         {
             var result = await _context.Reports.FirstAsync(x => x.Id == id);
