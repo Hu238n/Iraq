@@ -152,11 +152,12 @@ namespace Iraqi.Heros.Controllers
 
        [HttpGet("Comment/{start}/{end}")]
        public async Task<IActionResult> GetAllComment(int start,int end) {
-            var result = await _context.Comments.Where(x => x.Status == false).Select(x => new
+            var result = await _context.Comments.Include(x=>x.Person).Where(x => x.Status == false).Select(x => new
             {
                 x.Id,
                 x.Comment,
-                x.CommentDate
+                x.CommentDate,
+                x.Person.Name
             }).OrderBy(x => x.CommentDate).Skip(start).Take(end).AsNoTracking().ToListAsync();
             if (result.Count == 0)
                 return BadRequest();
