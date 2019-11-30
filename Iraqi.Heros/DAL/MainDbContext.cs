@@ -19,5 +19,6 @@ namespace Iraqi.Heros.DAL
         public DbSet<Image> Images { get; set; }
         public DbSet<Users> Users { get; set; }
         public DbSet<Comments> Comments { get; set; }
+        public DbSet<Report> Reports { get; set; }
     }
 }

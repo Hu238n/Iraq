@@ -1,27 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
+﻿
+
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace Iraqi.Heros.Models
 {
-    public class Comments
-
+    public class Report
     {
         [Key]
-        [JsonIgnore]
+        [Required]
         public Guid Id { get; set; }
-        public string Comment { get; set; }
+        [Required]
         [JsonIgnore]
         public Guid PersonId { get; set; }
         [JsonIgnore]
-        public DateTime CommentDate { get; set; }
+        public DateTime CreateDate { get; set; }
+        [Required]
+        public string Note { get; set; }
         [ForeignKey(nameof(PersonId))]
         [JsonIgnore]
         public Person Person { get; set; }
-        public bool Status { get; set; }
     }
 }

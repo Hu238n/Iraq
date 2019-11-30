@@ -22,6 +22,20 @@ namespace Iraqi.Heros.Controllers
             _dbContext = dbContext;
         }
 
+        [HttpPost("AddReport/{personId}/{note}")]
+        public async Task<IActionResult> AddReport(Guid personId, string note)
+        {
+            if (_dbContext.Persons.FirstOrDefault(x => x.Id == personId) == null || note.Length < 5)
+                return BadRequest();
+            _dbContext.Reports.Add(new Report()
+            {
+                PersonId = personId,
+                Note = note,
+                CreateDate = DateTime.Now
+            });
+            await _dbContext.SaveChangesAsync();
+            return Ok(personId);
+        }
         [HttpPost("Add")]
         public async Task<IActionResult> Add([FromForm]PersonForm personForm)
         {
