@@ -163,6 +163,20 @@ namespace Iraqi.Heros.Controllers
                 return BadRequest();
             return Ok(result);
         }
+       [HttpGet("Report/{start}/{end}")]
+       public async Task<IActionResult> GetAllReports(int start, int end)
+       {
+           var result = await _context.Reports.Include(x => x.Person).Where(x => x.Status == 0).Select(x => new
+           {
+               x.Id,
+               x.Note,
+               x.CreateDate,
+               x.Person.Name
+           }).OrderBy(x => x.CreateDate).Skip(start).Take(end).AsNoTracking().ToListAsync();
+           if (result.Count == 0)
+               return BadRequest();
+           return Ok(result);
+       }
 
         [HttpPut("Comment/{id}/{status}")]
         public async Task<IActionResult> UpdateComment(Guid id, bool status)
@@ -190,7 +204,32 @@ namespace Iraqi.Heros.Controllers
          await _context.SaveChangesAsync();
             return Ok(result);
         }
+        [HttpPut("Comment/{id}/{status}")]
+        public async Task<IActionResult> UpdateReport(Guid id, int status)
+        {
+            var result = await _context.Reports.FirstAsync(x => x.Id == id);
 
+
+            if (result == null)
+                return BadRequest(new
+                {
+                    Error = "Not Found Person"
+                });
+
+            if (status == 1)
+            {
+                result.Status = status;
+                _context.Reports.Update(result);
+
+            }
+            else
+            {
+                _context.Reports.Remove(result);
+            }
+
+            await _context.SaveChangesAsync();
+            return Ok(result);
+        }
 
         [HttpPost("Login")]
         [AllowAnonymous]

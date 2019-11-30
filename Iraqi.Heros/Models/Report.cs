@@ -22,5 +22,6 @@ namespace Iraqi.Heros.Models
         [ForeignKey(nameof(PersonId))]
         [JsonIgnore]
         public Person Person { get; set; }
+        public int Status { get; set; }
     }
 }
