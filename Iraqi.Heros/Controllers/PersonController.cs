@@ -68,7 +68,7 @@ namespace Iraqi.Heros.Controllers
                 var saved = await SaveFile(index, filename + Path.GetExtension(index.FileName));
               
             }
-             await _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync();
             return Ok(new
             {
                 person,

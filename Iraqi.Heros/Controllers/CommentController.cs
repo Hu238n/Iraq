@@ -22,7 +22,8 @@ namespace Iraqi.Heros.Controllers
         [HttpPost("AddComment/{personId}")]
         public async Task<IActionResult> AddComment(string  comments, Guid personId)
         {
-
+            if (_dbContext.Persons.FirstOrDefault(x => x.Id == personId) == null || comments == string.Empty || comments == "" || comments == null)
+                return BadRequest();
             var comment = new Comments()
             {
                 Id = Guid.NewGuid(),
@@ -39,6 +40,7 @@ namespace Iraqi.Heros.Controllers
         [HttpGet("Comments/{personId}/{start}/{end}")]
         public async Task<IActionResult> GetAction(Guid personId, int start, int end)
         {
+            
             var result = await _dbContext.Comments.Where(x=>x.PersonId==personId && x.Status==true).
                 Select(x => new {
                     x.Comment,
