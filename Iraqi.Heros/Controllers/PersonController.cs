@@ -31,7 +31,8 @@ namespace Iraqi.Heros.Controllers
             {
                 PersonId = personId,
                 Note = note,
-                CreateDate = DateTime.Now
+                CreateDate = DateTime.Now,
+                Status = 0
             });
             await _dbContext.SaveChangesAsync();
             return Ok(personId);
