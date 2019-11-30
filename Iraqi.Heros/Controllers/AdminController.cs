@@ -16,7 +16,7 @@ namespace Iraqi.Heros.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles ="admin")]
+    //[Authorize(Roles ="admin")]
     public class AdminController : ControllerBase
     {
         private readonly MainDbContext _context;
